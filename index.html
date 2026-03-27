@@ -65,94 +65,97 @@
 
 <body>
 
-<img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Kautex_Textron_Logo.svg" />
+<img id="logo"
+  src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Kautex_Textron_Logo.svg"
+  alt="Kautex Logo">
 
 <div id="globe-container"></div>
 
+<!-- ✅ REQUIRED JAVASCRIPT LIBRARIES -->
 <script src="https://unpkg.com/three/build/three.min.js"></script>
 <script src="https://unpkg.com/three-globe"></script>
 
 <script>
-  const people = [
-    { name:"Jadon Lopez", role:"KDP Operations", plant:"KLA", lat:34.44, lng:-83.11 },
-    { name:"Shane Skinner", role:"KDP Operations", plant:"KUS", lat:40.81, lng:-89.69 },
+const people = [
+  { name:"Jadon Lopez", role:"KDP Operations", plant:"KLA", lat:34.44, lng:-83.11 },
+  { name:"Shane Skinner", role:"KDP Operations", plant:"KUS", lat:40.81, lng:-89.69 },
 
-    { name:"Hanniatizel Martell", role:"KDP Engineering", plant:"KMX", lat:19.04, lng:-98.20 },
-    { name:"Rodrigo Gomez", role:"KDP Engineering", plant:"KMX", lat:19.04, lng:-98.20 },
-    { name:"AdrianEnrique Diaz", role:"KDP Operations", plant:"KMX", lat:19.04, lng:-98.20 },
+  { name:"Hanniatizel Martell", role:"KDP Engineering", plant:"KMX", lat:19.04, lng:-98.20 },
+  { name:"Rodrigo Gomez", role:"KDP Engineering", plant:"KMX", lat:19.04, lng:-98.20 },
+  { name:"AdrianEnrique Diaz", role:"KDP Operations", plant:"KMX", lat:19.04, lng:-98.20 },
 
-    { name:"Ana Lopez", role:"KDP Operations", plant:"KES", lat:41.38, lng:2.17 },
-    { name:"Carolina Garcia-Valdecasas", role:"KDP Operations", plant:"KES", lat:41.38, lng:2.17 },
+  { name:"Ana Lopez", role:"KDP Operations", plant:"KES", lat:41.38, lng:2.17 },
+  { name:"Carolina Garcia-Valdecasas", role:"KDP Operations", plant:"KES", lat:41.38, lng:2.17 },
 
-    { name:"Shreya SagarS", role:"KDP Engineering", plant:"KGJ", lat:23.02, lng:72.57 },
-    { name:"Sai Patil", role:"KDP Engineering", plant:"KGJ", lat:23.02, lng:72.57 },
+  { name:"Shreya SagarS", role:"KDP Engineering", plant:"KGJ", lat:23.02, lng:72.57 },
+  { name:"Sai Patil", role:"KDP Engineering", plant:"KGJ", lat:23.02, lng:72.57 },
 
-    { name:"Bilal Aizezi", role:"KDP Operations", plant:"KCC", lat:31.23, lng:121.47 },
-    { name:"Daria Giotina", role:"KDP Engineering", plant:"KRO", lat:44.33, lng:23.79 },
+  { name:"Bilal Aizezi", role:"KDP Operations", plant:"KCC", lat:31.23, lng:121.47 },
+  { name:"Daria Giotina", role:"KDP Engineering", plant:"KRO", lat:44.33, lng:23.79 },
 
-    { name:"Michael Havelka", role:"KDP Operations", plant:"KCZ", lat:49.01, lng:14.87 },
-    { name:"Martin Jadlovsky", role:"KDP Operations", plant:"KCZ", lat:49.01, lng:14.87 },
+  { name:"Michael Havelka", role:"KDP Operations", plant:"KCZ", lat:49.01, lng:14.87 },
+  { name:"Martin Jadlovsky", role:"KDP Operations", plant:"KCZ", lat:49.01, lng:14.87 },
 
-    { name:"Mouaad ElBakili", role:"KDP Engineering", plant:"KDU", lat:50.74, lng:7.10 }
-  ];
+  { name:"Mouaad ElBakili", role:"KDP Engineering", plant:"KDU", lat:50.74, lng:7.10 }
+];
 
-  // Stack by location
-  const grouped = {};
-  people.forEach(p => {
-    const key = `${p.lat},${p.lng}`;
-    grouped[key] = grouped[key] || [];
-    grouped[key].push(p);
-  });
+// Group by location (stacking)
+const grouped = {};
+people.forEach(p => {
+  const key = `${p.lat},${p.lng}`;
+  grouped[key] = grouped[key] || [];
+  grouped[key].push(p);
+});
 
-  const points = Object.entries(grouped).map(([key, members]) => {
-    const [lat, lng] = key.split(",").map(Number);
-    return { lat, lng, members };
-  });
+const points = Object.entries(grouped).map(([key, members]) => {
+  const [lat, lng] = key.split(",").map(Number);
+  return { lat, lng, members };
+});
 
-  const globe = new ThreeGlobe()
-    .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
-    .pointsData(points)
-    .pointAltitude(0.02)
-    .pointRadius(0.35)
-    .pointColor(() => "#00c2ff")
-    .pointLabel(d => `
-      <div class="popup">
-        ${d.members.map(m => `
-          <div class="entry">
-            <div class="profile"></div>
-            <div class="name">${m.name}</div>
-            <div class="role">${m.role}</div>
-            <div class="plant">${m.plant}</div>
-          </div>
-        `).join("")}
-      </div>
-    `);
+const globe = new ThreeGlobe()
+  .globeImageUrl("https://unpkg.com/three-globe/example/img/earth-night.jpg")
+  .pointsData(points)
+  .pointAltitude(0.02)
+  .pointRadius(0.35)
+  .pointColor(() => "#00c2ff")
+  .pointLabel(d =>
+    `<div class="popup">
+      ${d.members.map(m => `
+        <div class="entry">
+          <div class="profile"></div>
+          <div class="name">${m.name}</div>
+          <div class="role">${m.role}</div>
+          <div class="plant">${m.plant}</div>
+        </div>
+      `).join("")}
+    </div>`
+  );
 
-  const scene = new THREE.Scene();
-  scene.add(globe);
+const scene = new THREE.Scene();
+scene.add(globe);
 
-  const camera = new THREE.PerspectiveCamera();
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  camera.position.z = 300;
+const camera = new THREE.PerspectiveCamera();
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+camera.position.z = 300;
 
-  const renderer = new THREE.WebGLRenderer({ antialias:true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById("globe-container").appendChild(renderer.domElement);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById("globe-container").appendChild(renderer.domElement);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-  scene.add(new THREE.DirectionalLight(0xffffff, 0.8));
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+scene.add(new THREE.DirectionalLight(0xffffff, 0.8));
 
-  let rotate = true;
-  globe.onPointHover(p => rotate = !p);
+let rotate = true;
+globe.onPointHover(p => rotate = !p);
 
-  function animate() {
-    if (rotate) globe.rotation.y += 0.0025;
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
-  }
-  animate();
+function animate() {
+  if (rotate) globe.rotation.y += 0.0025;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
 </script>
+
 </body>
 </html>
-``
